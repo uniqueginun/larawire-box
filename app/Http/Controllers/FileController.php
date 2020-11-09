@@ -20,11 +20,9 @@ class FileController extends Controller
      */
     public function index(Request $request)
     {
-        $currentTeamId = $request->user()->currentTeam->id;
+        $rootObj = optional(Obj::root()->forCurrentTeam()->first())->uuid;
 
-        $rootObj = optional(Obj::root()->forTeam($currentTeamId)->first())->uuid;
-
-        $object = Obj::forTeam($currentTeamId)
+        $object = Obj::forCurrentTeam()
                     ->where('uuid', $request->get('uuid', $rootObj))
                     ->firstOrFail();
 

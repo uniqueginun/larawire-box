@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\RelatedToTeam;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +10,7 @@ use Illuminate\Support\Str;
 
 class Obj extends Model
 {
-    use HasFactory;
+    use HasFactory, RelatedToTeam;
 
     protected $table = 'objects';
 
@@ -40,11 +41,6 @@ class Obj extends Model
     public function objectable()
     {
         return $this->morphTo();
-    }
-
-    public function scopeForTeam(Builder $builder, $teamId)
-    {
-        return $builder->where('team_id', $teamId);
     }
 
     public function scopeRoot(Builder $builder)
