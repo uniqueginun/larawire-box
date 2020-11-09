@@ -20,10 +20,16 @@
                 <div class="border-2 border-gray-200 rounded-lg">
                     <div class="py-2 px-3">
                         <div class="flex items-center">
-                            <a href="" class="font-bold text-gray-400">Breadcrumb</a>
-                            <svg class="mx-1 w-5 h-5 text-gray-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                            </svg>
+                            @foreach($ancestors as $ancestor)
+                                <a href="{{ route('files', ['uuid' => $ancestor->uuid]) }}" class="font-bold text-gray-400">
+                                    {{ $ancestor->objectable->name }}
+                                </a>
+                                @if(!$loop->last)
+                                    <svg class="mx-1 w-5 h-5 text-gray-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                    </svg>
+                                @endif
+                            @endforeach
                         </div>
                     </div>
                     <div class="overflow-auto">
@@ -38,7 +44,7 @@
                             </thead>
                             <tbody>
                             @forelse($object->children as $child)
-                                <tr class="border-b-2 border-gray-100 hover:bg-gray-100">
+                                <tr class="@if(!$loop->last) border-b-2 border-gray-100 @endif hover:bg-gray-100">
                                 <td class="flex items-center py-2 px-3">
                                     @if($child->isFile())
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">

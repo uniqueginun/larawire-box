@@ -6,6 +6,7 @@ use App\Traits\RelatedToTeam;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class Obj extends Model
@@ -30,11 +31,6 @@ class Obj extends Model
         });
     }
 
-    public function children()
-    {
-        return $this->hasMany(self::class, 'parent_id', 'id');
-    }
-
     /**
      * Get the owning objectable model.
      */
@@ -56,5 +52,40 @@ class Obj extends Model
     public function isFolder()
     {
         return $this->objectable_type === "folder";
+    }
+
+    /***
+     * sub folders from the current obj
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function children()
+    {
+        return $this->hasMany(self::class, 'parent_id', 'id');
+    }
+
+
+    /***
+     * the direct parent of the current obj
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'parent_id', 'id');
+    }
+
+    public function ancestors(): Collection
+    {
+        $ancestor = $this;
+
+        $ancestors = collect();
+
+        while ($ancestor->parent) {
+            $ancestor = $ancestor->parent;
+            $ancestors->push($ancestor);
+        }
+
+        $ancestors->push($this);
+
+        return $ancestors->sortBy('id');
     }
 }

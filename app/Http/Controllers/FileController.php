@@ -24,10 +24,12 @@ class FileController extends Controller
 
         $object = Obj::forCurrentTeam()
                     ->where('uuid', $request->get('uuid', $rootObj))
+                    ->with(['children.objectable'])
                     ->firstOrFail();
 
-        //dd($object->children->get(0)->isFile());
-
-        return view('files.index', compact('object'));
+        return view('files.index', [
+            'object' => $object,
+            'ancestors' => $object->ancestors()
+        ]);
     }
 }
