@@ -16,6 +16,12 @@ class FileBrowser extends Component
         'name' => ''
     ];
 
+    public $renamingObject;
+
+    public $renamingObjectState = [
+        'name' => ''
+    ];
+
     public function mount(Obj $object)
     {
         $this->object = $object;
@@ -24,6 +30,38 @@ class FileBrowser extends Component
     protected $rules = [
         'newFolderState.name' => 'required|max:255'
     ];
+
+    public function updatingRenamingObject($id)
+    {
+        if (!$id) {
+            $this->renamingObjectState = [
+                'name' => ''
+            ];
+            return;
+        }
+
+        if ($object = Obj::forCurrentTeam()->find($id)) {
+            $this->renamingObjectState = [
+                'name' => $object->objectable->name
+            ];
+        }
+    }
+
+    public function renameObject()
+    {
+        $this->validate([
+            'renamingObjectState.name' => 'required|max:255'
+        ]);
+
+        Obj::forCurrentTeam()->find($this->renamingObject)
+                             ->objectable
+                             ->update($this->renamingObjectState);
+
+        $this->object = $this->object->fresh();
+
+        $this->renamingObject = null;
+
+    }
 
     public function createFolder()
     {

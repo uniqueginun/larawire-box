@@ -66,22 +66,42 @@
                                 @forelse($object->children as $child)
                                     <tr class="@if(!$loop->last) border-b-2 border-gray-100 @endif hover:bg-gray-100">
                                         <td class="flex items-center py-2 px-3">
+
                                             @if($child->isFile())
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                                 </svg>
-                                                <a href="#" class="p-2 font-bold text-blue-700 flex-grow">
-                                                    {{ $child->objectable->name }}
-                                                </a>
-                                            @endif
-                                            @if($child->isFolder())
+                                            @else
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-700" viewBox="0 0 20 20" fill="none" stroke="currentColor">
                                                     <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
                                                 </svg>
-                                                <a href="{{ route('files', ['uuid' => $child->uuid]) }}" class="p-2 font-bold text-blue-700 flex-grow">
-                                                    {{ $child->objectable->name }}
-                                                </a>
                                             @endif
+
+                                            @if($renamingObject === $child->id)
+                                                <form wire:submit.prevent="renameObject" class="w-full flex items-center ml-2 flex-grow">
+                                                    <input type="search" placeholder="Enter folder name" wire:model="renamingObjectState.name" class="w-full px-3 h-10 border-2 rounded-lg outline-none mr-2">
+                                                    <button type="submit" class="bg-blue-600 text-white px-3 h-9 rounded-lg mr-2 font-bold">
+                                                        Rename
+                                                    </button>
+                                                    <button type="button" wire:click="$toggle('renamingObject', null)" class="bg-gray-200 px-3 h-9 rounded-lg mr-2">
+                                                        Not
+                                                    </button>
+                                                </form>
+                                            @else
+
+                                                @if($child->isFile())
+                                                    <a href="#" class="p-2 font-bold text-blue-700 flex-grow">
+                                                        {{ $child->objectable->name }}
+                                                    </a>
+                                                @endif
+                                                @if($child->isFolder())
+                                                    <a href="{{ route('files', ['uuid' => $child->uuid]) }}" class="p-2 font-bold text-blue-700 flex-grow">
+                                                        {{ $child->objectable->name }}
+                                                    </a>
+                                                @endif
+
+                                            @endif
+
                                         </td>
                                         <td class="py-2 px-3">
                                             @if($child->isFile())
@@ -97,7 +117,7 @@
                                             <div class="flex items-center justify-end">
                                                 <ul class="flex items-center">
                                                     <li class="mr-2">
-                                                        <button class="text-gray-400 font-bold">Rename</button>
+                                                        <button wire:click="$set('renamingObject', {{ $child->id }})" class="text-gray-400 font-bold">Rename</button>
                                                     </li>
                                                     <li class="mr-2">
                                                         <button class="text-red-400 font-bold">Delete</button>
