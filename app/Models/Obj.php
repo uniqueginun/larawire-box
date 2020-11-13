@@ -73,7 +73,7 @@ class Obj extends Model
         return $this->belongsTo(self::class, 'parent_id', 'id');
     }
 
-    public function ancestors(): Collection
+    public function ancestors()
     {
         $ancestor = $this;
 
@@ -86,6 +86,8 @@ class Obj extends Model
 
         $ancestors->push($this);
 
-        return $ancestors->sortBy('id');
+        $ancestors = $ancestors->sortBy('id');
+
+        return $ancestors;
     }
 }

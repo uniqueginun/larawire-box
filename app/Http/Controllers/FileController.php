@@ -20,7 +20,7 @@ class FileController extends Controller
      */
     public function index(Request $request)
     {
-        $rootObj = optional(Obj::root()->forCurrentTeam()->first())->uuid;
+        $rootObj = Obj::root()->forCurrentTeam()->first()->uuid;
 
         $object = Obj::forCurrentTeam()
                     ->where('uuid', $request->get('uuid', $rootObj))
@@ -28,8 +28,8 @@ class FileController extends Controller
                     ->firstOrFail();
 
         return view('files.index', [
-            'object' => $object,
-            'ancestors' => $object->ancestors()
+            'object' => $object
+
         ]);
     }
 }
