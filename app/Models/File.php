@@ -27,4 +27,10 @@ class File extends Model
             $file->uuid = Str::uuid();
         });
     }
+
+    public function humanFileSize()
+    {
+        for($i = 0; ($this->size / 1024) > 0.9; $i++, $this->size /= 1024) {}
+        return round($this->size, 2).['B','kB','MB','GB','TB','PB','EB','ZB','YB'][$i];
+    }
 }

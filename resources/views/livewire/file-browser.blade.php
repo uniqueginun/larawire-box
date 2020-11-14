@@ -105,7 +105,7 @@
                                         </td>
                                         <td class="py-2 px-3">
                                             @if($child->isFile())
-                                                {{ $child->objectable->size }}
+                                                {{ $child->objectable->humanFileSize() }}
                                             @else
                                                 &mdash;
                                             @endif
