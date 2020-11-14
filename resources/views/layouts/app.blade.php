@@ -13,6 +13,13 @@
         <!-- Styles -->
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
+        <!-- filepond css style -->
+        <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+
+        <!-- filepond js script -->
+        <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+
+
         @livewireStyles
 
         <!-- Scripts -->
@@ -36,6 +43,8 @@
         </div>
 
         @stack('modals')
+
+        @stack('scripts')
 
         @livewireScripts
     </body>

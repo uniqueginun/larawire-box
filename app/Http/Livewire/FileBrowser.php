@@ -4,11 +4,16 @@ namespace App\Http\Livewire;
 
 use App\Models\Obj;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class FileBrowser extends Component
 {
 
+    use WithFileUploads;
+
     public $object;
+
+    public $upload;
 
     public $creatingNewFolder = false;
 
@@ -22,6 +27,8 @@ class FileBrowser extends Component
         'name' => ''
     ];
 
+    public $showFileUploadForm = false;
+
     public function mount(Obj $object)
     {
         $this->object = $object;
@@ -30,6 +37,29 @@ class FileBrowser extends Component
     protected $rules = [
         'newFolderState.name' => 'required|max:255'
     ];
+
+    public function updatedUpload($upload)
+    {
+        $object = $this->currentTeam->objects()->make([
+            'parent_id' => $this->object->id
+        ]);
+
+
+
+        $file = $this->currentTeam->files()->create([
+            'name' => $upload->getClientOriginalName(),
+            'size' => $upload->getSize(),
+            'path' => $upload->storePublicly('files', [
+                'disk' => 'local'
+            ])
+        ]);
+
+        $object->objectable()->associate($file);
+
+        $object->save();
+
+        $this->object = $this->object->fresh();
+    }
 
     public function updatingRenamingObject($id)
     {
