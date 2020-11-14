@@ -44,8 +44,6 @@ class FileBrowser extends Component
             'parent_id' => $this->object->id
         ]);
 
-
-
         $file = $this->currentTeam->files()->create([
             'name' => $upload->getClientOriginalName(),
             'size' => $upload->getSize(),
